@@ -1,6 +1,8 @@
 ﻿const game = {
     init: function () {
         this.drawBoard();
+
+        this.initRightClick();
     },
 
     drawBoard: function () {
@@ -51,6 +53,17 @@
             `<div class="field${isMine ? ' mine' : ''}"
                         data-row="${row}"
                         data-col="${col}"></div>`);
+    },
+
+    initRightClick() {
+        const fields = document.querySelectorAll('.game-field .row .field');
+        
+        for (let field of fields) {
+            field.addEventListener('contextmenu', function (event) {
+                event.preventDefault();
+                event.currentTarget.classList.toggle('flagged');
+            });
+        }
     },
 };
 
