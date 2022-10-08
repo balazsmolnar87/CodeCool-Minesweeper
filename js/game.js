@@ -36,6 +36,22 @@
         gameField.style.width = (gameField.dataset.cellWidth * rows) + 'px';
         gameField.style.height = (gameField.dataset.cellHeight * cols) + 'px';
     },
+
+    addRow: function (gameField) {
+        gameField.insertAdjacentHTML(
+            'beforeend',
+            '<div class="row"></div>'
+        );
+        return gameField.lastElementChild;
+    },
+    
+    addCell: function (rowElement, row, col, isMine) {
+        rowElement.insertAdjacentHTML(
+            'beforeend',
+            `<div class="field${isMine ? ' mine' : ''}"
+                        data-row="${row}"
+                        data-col="${col}"></div>`);
+    },
 };
 
 game.init();
