@@ -31,6 +31,11 @@
         } while (mines.size < mineCount && mines.size < cellCount);
         return mines;
     },
+
+    setGameFieldSize: function (gameField, rows, cols) {
+        gameField.style.width = (gameField.dataset.cellWidth * rows) + 'px';
+        gameField.style.height = (gameField.dataset.cellHeight * cols) + 'px';
+    },
 };
 
 game.init();
