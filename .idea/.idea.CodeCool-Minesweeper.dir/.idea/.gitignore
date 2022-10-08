@@ -1,0 +1,11 @@
+﻿.git/
+.idea/
+/shelf/
+/workspace.xml
+/modules.xml
+/contentModel.xml
+/projectSettingsUpdater.xml
+/.idea.CodeCool-Minesweeper.iml
+/httpRequests/
+/dataSources/
+/dataSources.local.xml
