@@ -23,6 +23,25 @@
     box-sizing: border-box;
 }
 
+.game-field .row .mine {
+    height: 16px;
+    width: 16px;
+    background: red; 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .game-field .row .field.flagged {
     background: url('../img/flag.png');
 }
+
+.game-field .row .field.open {
+    background: url('../img/open-field.png');
+    text-align: center;
+}
+
+.game-field .row .field.open.mine {
+    background: url('../img/mine.png');
+}
+

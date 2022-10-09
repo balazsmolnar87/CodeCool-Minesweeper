@@ -1,8 +1,15 @@
-﻿const game = {
+﻿let isGameOver = false;
+
+const game = {
+    
     init: function () {
+        //Create the board
         this.drawBoard();
 
+        
+        //What should happen when we click on a tile    
         this.initRightClick();
+        this.initLeftClick();
     },
 
     drawBoard: function () {
@@ -47,7 +54,7 @@
         return gameField.lastElementChild;
     },
     
-    addCell: function (rowElement, row, col, isMine) {
+    addCell: function (rowElement, row, col, isMine, adjacent=0) {
         rowElement.insertAdjacentHTML(
             'beforeend',
             `<div class="field${isMine ? ' mine' : ''}"
@@ -55,7 +62,7 @@
                         data-col="${col}"></div>`);
     },
 
-    initRightClick() {
+    initRightClick: function () {
         const fields = document.querySelectorAll('.game-field .row .field');
         
         for (let field of fields) {
@@ -65,6 +72,66 @@
             });
         }
     },
+    
+    initLeftClick: function () {
+        const fields = document.querySelectorAll('.game-field .row .field');
+
+        for (let field of fields) {
+            field.addEventListener('click', function (event) {
+                if (isGameOver) return;
+                if (field.classList.contains('open') || field.classList.contains('flagged')) return;
+
+                function countAdjacentMines(field) {
+                    let total = 0;
+                    let row = Number(field.getAttribute('data-row'));
+                    let col = Number(field.getAttribute('data-col'));
+
+                    for (let f of fields){
+                        let fRow = Number(f.getAttribute('data-row'));
+                        let fCol = Number(f.getAttribute('data-col'));
+                        if (fRow == row -1 && fCol == col -1 && f.classList.contains('mine')){
+                            total++;
+                        }
+                        if (fRow == row -1 && fCol == col && f.classList.contains('mine')){
+                            total++;
+                        }
+                        if (fRow == row -1 && fCol == col +1 && f.classList.contains('mine')){
+                            total++;
+                        }
+                        if (fRow == row && fCol == col -1 && f.classList.contains('mine')){
+                            total++;
+                        }
+                        if (fRow == row && fCol == col +1 && f.classList.contains('mine')){
+                            total++;
+                        }
+                        if (fRow == row +1 && fCol == col -1 && f.classList.contains('mine')){
+                            total++;
+                        }
+                        if (fRow == row +1 && fCol == col && f.classList.contains('mine')){
+                            total++;
+                        }
+                        if (fRow == row +1 && fCol == col +1 && f.classList.contains('mine')){
+                            total++;
+                        }
+                    }
+                    
+                    return total;
+                }
+
+                if (field.classList.contains('mine')) {
+                    console.log('Boom! Game over!');
+                } else {
+                    let total = countAdjacentMines(field);
+                    if (total != 0) {
+                        field.classList.add('open');
+                        field.innerHTML = total;
+                        return
+                    }
+                }
+                field.classList.add('open');
+            });
+        }
+    }
 };
 
 game.init();
