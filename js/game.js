@@ -1,15 +1,20 @@
 ﻿let isGameOver = false;
+let flagsLeftCounter = document.querySelector('#flags-left-counter');
+let flagsLeft = 0;
+
+function checkForWin() {
+    //todo
+}
 
 const game = {
-    
     init: function () {
         //Create the board
         this.drawBoard();
 
-        
         //What should happen when we click on a tile    
         this.initRightClick();
         this.initLeftClick();
+
     },
 
     drawBoard: function () {
@@ -19,8 +24,12 @@ const game = {
         const cols = parseInt(urlParams.get('cols'));
         const mineCount = parseInt(urlParams.get('mines'));
         const minePlaces = this.getRandomMineIndexes(mineCount, cols, rows);
+        
+        //Set how many flags do we have
+        flagsLeftCounter.setAttribute("value", mineCount.toString());
+        flagsLeft = mineCount;
 
-        let gameField = document.querySelector(".game-field");
+        let gameField = document.querySelector('.game-field');
         this.setGameFieldSize(gameField, rows, cols);
         let cellIndex = 0
         for (let row = 0; row < rows; row++) {
@@ -68,7 +77,21 @@ const game = {
         for (let field of fields) {
             field.addEventListener('contextmenu', function (event) {
                 event.preventDefault();
-                event.currentTarget.classList.toggle('flagged');
+                if (isGameOver) return;
+                if (!field.classList.contains('opened')){
+                    if (!field.classList.contains('flagged') && flagsLeft > 0){
+                        field.classList.add('flagged');
+                        flagsLeft--;
+                        flagsLeftCounter.setAttribute("value", flagsLeft.toString());
+                        checkForWin();
+                    } else {
+                        if (field.classList.contains('flagged')){
+                            field.classList.remove('flagged');
+                            flagsLeft++;
+                            flagsLeftCounter.setAttribute("value", flagsLeft.toString());
+                        }
+                    }
+                }
             });
         }
     },
@@ -131,7 +154,7 @@ const game = {
                 field.classList.add('open');
             });
         }
-    }
+    },
 };
 
 game.init();
