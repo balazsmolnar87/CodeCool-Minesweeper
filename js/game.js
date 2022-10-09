@@ -59,7 +59,7 @@ const game = {
         for (let row = 0; row < rows; row++) {
             const rowElement = this.addRow(gameField);
             for (let col = 0; col < cols; col++) {
-                this.addCell(rowElement, row, col, minePlaces.has(cellIndex));
+                this.addCell(rowElement, row, col, minePlaces.has(cellIndex), cellIndex);
                 cellIndex++;
             }
         }
@@ -87,10 +87,11 @@ const game = {
         return gameField.lastElementChild;
     },
     
-    addCell: function (rowElement, row, col, isMine, adjacent=0) {
+    addCell: function (rowElement, row, col, isMine, cellIndex) {
         rowElement.insertAdjacentHTML(
             'beforeend',
             `<div class="field${isMine ? ' mine' : ''}"
+                        id="${cellIndex}"
                         data-row="${row}"
                         data-col="${col}"></div>`);
     },
@@ -164,6 +165,10 @@ const game = {
                     return total;
                 }
 
+                function recur() {
+                    //todo
+                }
+
                 if (field.classList.contains('mine')) {
                     gameOver();
                 } else {
@@ -171,8 +176,9 @@ const game = {
                     if (total != 0) {
                         field.classList.add('open');
                         field.innerHTML = total;
-                        return
+                        return;
                     }
+                    recur();
                 }
                 field.classList.add('open');
             });
