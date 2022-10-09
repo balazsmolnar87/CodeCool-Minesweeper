@@ -1,8 +1,15 @@
-﻿const game = {
+﻿let isGameOver = false;
+
+const game = {
+    
     init: function () {
+        //Create the board
         this.drawBoard();
 
+        
+        //What should happen when we click on a tile    
         this.initRightClick();
+        this.initLeftClick();
     },
 
     drawBoard: function () {
@@ -47,12 +54,13 @@
         return gameField.lastElementChild;
     },
     
-    addCell: function (rowElement, row, col, isMine) {
+    addCell: function (rowElement, row, col, isMine, adjacent=0) {
         rowElement.insertAdjacentHTML(
             'beforeend',
             `<div class="field${isMine ? ' mine' : ''}"
                         data-row="${row}"
-                        data-col="${col}"></div>`);
+                        data-col="${col}"
+                        data-adjacent="${adjacent}"></div>`);
     },
 
     initRightClick() {
@@ -65,6 +73,28 @@
             });
         }
     },
+    
+    initLeftClick() {
+        const fields = document.querySelectorAll('.game-field .row .field');
+
+        for (let field of fields) {
+            field.addEventListener('click', function (event) {
+                if (isGameOver) return;
+                if (field.classList.contains('open') || field.classList.contains('flagged')) return;
+                if (field.classList.contains('mine')) {
+                    console.log('Boom! Game over!');
+                } else {
+                    let total = field.getAttribute('data-adjacent');
+                    if (total != 0) {
+                        field.classList.add('open');
+                        field.innerHTML = total;
+                        return
+                    }
+                }
+                field.classList.add('open');
+            });
+        }
+    }
 };
 
 game.init();
