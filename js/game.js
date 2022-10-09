@@ -16,6 +16,19 @@ function checkForWin() {
     }    
 }
 
+function gameOver() {
+    const fields = document.querySelectorAll('.game-field .row .field');
+    
+    for (let field of fields) {
+        if (field.classList.contains("mine")) {
+            field.classList.add("open")   
+        }
+    }
+    
+    alert('Boom! Game over!');
+    isGameOver = true;
+}
+
 const game = {
     init: function () {
         //Create the board
@@ -152,8 +165,7 @@ const game = {
                 }
 
                 if (field.classList.contains('mine')) {
-                    alert('Boom! Game over!');
-                    isGameOver = true;
+                    gameOver();
                 } else {
                     let total = countAdjacentMines(field);
                     if (total != 0) {
