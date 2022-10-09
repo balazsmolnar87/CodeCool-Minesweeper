@@ -1,9 +1,19 @@
-﻿let isGameOver = false;
-let flagsLeftCounter = document.querySelector('#flags-left-counter');
+﻿const flagsLeftCounter = document.querySelector('#flags-left-counter');
+let isGameOver = false;
 let flagsLeft = 0;
+let mines = 0;
 
 function checkForWin() {
-    //todo
+    const fields = document.querySelectorAll('.game-field .row .field');
+    
+    let total = 0;
+    for (let field of fields) {
+        if (field.classList.contains("mine") && field.classList.contains("flagged")) total++;
+    }
+    if (total === mines) {
+        alert('You won!')
+        isGameOver = true;
+    }    
 }
 
 const game = {
@@ -23,6 +33,7 @@ const game = {
         const rows = parseInt(urlParams.get('rows'));
         const cols = parseInt(urlParams.get('cols'));
         const mineCount = parseInt(urlParams.get('mines'));
+        mines = mineCount;
         const minePlaces = this.getRandomMineIndexes(mineCount, cols, rows);
         
         //Set how many flags do we have
@@ -98,7 +109,7 @@ const game = {
     
     initLeftClick: function () {
         const fields = document.querySelectorAll('.game-field .row .field');
-
+        
         for (let field of fields) {
             field.addEventListener('click', function (event) {
                 if (isGameOver) return;
@@ -137,12 +148,12 @@ const game = {
                             total++;
                         }
                     }
-                    
                     return total;
                 }
 
                 if (field.classList.contains('mine')) {
-                    console.log('Boom! Game over!');
+                    alert('Boom! Game over!');
+                    isGameOver = true;
                 } else {
                     let total = countAdjacentMines(field);
                     if (total != 0) {
