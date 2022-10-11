@@ -1,4 +1,4 @@
-﻿const game = {
+const game = {
     flagsLeftCounter: document.querySelector('#flags-left-counter'),
     isGameOver : false,
     flagsLeft : 0,
