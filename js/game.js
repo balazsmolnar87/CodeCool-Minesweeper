@@ -134,14 +134,14 @@
                     let cRow = Number(cell.getAttribute('data-row'));
                     let cCol = Number(cell.getAttribute('data-col'));
 
-                    if (cRow === row-1 && cCol === col-1) leftClick(cell);
-                    if (cRow === row-1 && cCol === col)   leftClick(cell);
-                    if (cRow === row-1 && cCol === col+1) leftClick(cell);
-                    if (cRow === row   && cCol === col-1) leftClick(cell);
-                    if (cRow === row   && cCol === col+1) leftClick(cell);
-                    if (cRow === row+1 && cCol === col-1) leftClick(cell);
-                    if (cRow === row+1 && cCol === col)   leftClick(cell);
-                    if (cRow === row+1 && cCol === col+1) leftClick(cell);
+                    if      (cRow === row-1 && cCol === col-1) leftClick(cell);
+                    else if (cRow === row-1 && cCol === col)   leftClick(cell);
+                    else if (cRow === row-1 && cCol === col+1) leftClick(cell);
+                    else if (cRow === row   && cCol === col-1) leftClick(cell);
+                    else if (cRow === row   && cCol === col+1) leftClick(cell);
+                    else if (cRow === row+1 && cCol === col-1) leftClick(cell);
+                    else if (cRow === row+1 && cCol === col)   leftClick(cell);
+                    else if (cRow === row+1 && cCol === col+1) leftClick(cell);
                 }
             }
 
@@ -149,12 +149,15 @@
                 gameOver();
             } else {
                 let total = countAdjacentMines(field);
+
                 if (total !== 0) {
                     field.classList.add('open');
                     field.innerHTML = total;
                     return;
+                } else{
+                    field.classList.add('open');
+                    recur();
                 }
-                recur();
             }
             field.classList.add('open');
         }
