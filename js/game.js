@@ -1,4 +1,4 @@
-﻿import {checkForWin} from 'js/checks'
+import {checkForWin} from 'js/checks'
 import {drawBoard} from 'js/domManipulation'
 
 export const game = {
