@@ -77,7 +77,7 @@
                 field.classList.add('flagged');
                 game.flagsLeft--;
                 game.flagsLeftCounter.setAttribute("value", game.flagsLeft.toString());
-                checkForWin();
+                game.checkForWin();
             } else {
                 if (field.classList.contains('flagged')){
                     field.classList.remove('flagged');
@@ -146,7 +146,7 @@
             }
 
             if (field.classList.contains('mine')) {
-                gameOver();
+                game.gameOver();
             } else {
                 let total = countAdjacentMines(field);
 
@@ -166,31 +166,31 @@
             field.addEventListener('click', () => leftClick(field));
         }
     },
-};
 
-function checkForWin() {
-    const fields = document.querySelectorAll('.game-field .row .field');
-    
-    let total = 0;
-    for (let field of fields) {
-        if (field.classList.contains("mine") && field.classList.contains("flagged")) total++;
-    }
-    if (total === game.mines) {
-        alert('You won!')
-        game.isGameOver = true;
-    }    
-}
-
-function gameOver() {
-    const fields = document.querySelectorAll('.game-field .row .field');
-    for (let field of fields) {
-        if (field.classList.contains("mine")) {
-            field.classList.add("open")
+    checkForWin: function () {
+        const fields = document.querySelectorAll('.game-field .row .field');
+        
+        let total = 0;
+        for (let field of fields) {
+            if (field.classList.contains("mine") && field.classList.contains("flagged")) total++;
         }
+        if (total === game.mines) {
+            alert('You won!')
+            game.isGameOver = true;
+        }    
+    },
+    
+    gameOver: function () {
+        const fields = document.querySelectorAll('.game-field .row .field');
+        for (let field of fields) {
+            if (field.classList.contains("mine")) {
+                field.classList.add("open")
+            }
+        }
+    
+        alert('Boom! Game over!');
+        game.isGameOver = true;
     }
-
-    alert('Boom! Game over!');
-    game.isGameOver = true;
-}
+};
 
 game.init();
