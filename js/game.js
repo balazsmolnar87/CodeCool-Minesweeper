@@ -104,45 +104,45 @@
         function leftClick(field) {
             if (game.isGameOver) return;
             if (field.classList.contains('open') || field.classList.contains('flagged')) return;
+            
+            function getNeighbors(field){
+                let row = Number(field.getAttribute('data-row'));
+                let col = Number(field.getAttribute('data-col'));
+                
+                let neighbors = [];
+                
+                neighbors.push(getNode(row-1,col-1));
+                neighbors.push(getNode(row-1,col));
+                neighbors.push(getNode(row-1,col+1));
+                neighbors.push(getNode(row,col-1));
+                neighbors.push(getNode(row,col+1));
+                neighbors.push(getNode(row+1,col-1));
+                neighbors.push(getNode(row+1,col));
+                neighbors.push(getNode(row+1,col+1));
+                
+                return neighbors.filter(x => x != null);
+            }
+            
+            function getNode(row, col) {
+                return document.querySelector(`div[data-row="${row}"][data-col="${col}"]`);
+            }
 
             function countAdjacentMines(field) {
                 let total = 0;
-                let row = Number(field.getAttribute('data-row'));
-                let col = Number(field.getAttribute('data-col'));
 
-                for (let f of fields){
-                    let fRow = Number(f.getAttribute('data-row'));
-                    let fCol = Number(f.getAttribute('data-col'));
-
-                    if      (fRow === row-1 && fCol === col-1 && f.classList.contains('mine')) total++;
-                    else if (fRow === row-1 && fCol === col   && f.classList.contains('mine')) total++;
-                    else if (fRow === row-1 && fCol === col+1 && f.classList.contains('mine')) total++;
-                    else if (fRow === row   && fCol === col-1 && f.classList.contains('mine')) total++;
-                    else if (fRow === row   && fCol === col+1 && f.classList.contains('mine')) total++;
-                    else if (fRow === row+1 && fCol === col-1 && f.classList.contains('mine')) total++;
-                    else if (fRow === row+1 && fCol === col   && f.classList.contains('mine')) total++;
-                    else if (fRow === row+1 && fCol === col+1 && f.classList.contains('mine')) total++;
+                function hasMine(node){
+                    return node.classList.contains('mine')
                 }
+                
+                for (let neighbor of getNeighbors(field)) {
+                    if (hasMine(neighbor)) total++;
+                }
+
                 return total;
             }
 
-            function recur() {
-                for (let cell of fields){
-                    let row = Number(field.getAttribute('data-row'));
-                    let col = Number(field.getAttribute('data-col'));
-
-                    let cRow = Number(cell.getAttribute('data-row'));
-                    let cCol = Number(cell.getAttribute('data-col'));
-
-                    if      (cRow === row-1 && cCol === col-1) leftClick(cell);
-                    else if (cRow === row-1 && cCol === col)   leftClick(cell);
-                    else if (cRow === row-1 && cCol === col+1) leftClick(cell);
-                    else if (cRow === row   && cCol === col-1) leftClick(cell);
-                    else if (cRow === row   && cCol === col+1) leftClick(cell);
-                    else if (cRow === row+1 && cCol === col-1) leftClick(cell);
-                    else if (cRow === row+1 && cCol === col)   leftClick(cell);
-                    else if (cRow === row+1 && cCol === col+1) leftClick(cell);
-                }
+            function recur(field) {
+                for (let neighbor of getNeighbors(field)) leftClick(neighbor)
             }
 
             if (field.classList.contains('mine')) {
@@ -156,7 +156,7 @@
                     return;
                 } else{
                     field.classList.add('open');
-                    recur();
+                    recur(field);
                 }
             }
             field.classList.add('open');
