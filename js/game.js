@@ -112,45 +112,82 @@ const util = {
     },
 
     leftClick: function (field) {
-    if (game.isGameOver) return;
-    if (field.classList.contains('open') || field.classList.contains('flagged')) return;
-    if (field.classList.contains('mine')) {
-        game.gameOver();
-    } else {
-        let total = util.countAdjacentMines(field);
-
-        if (total !== 0) {
-            field.classList.add('open');
-            field.innerHTML = total;
-            return;
-        } else{
-            field.classList.add('open');
-            util.recur(field);
+        //Start timer
+        if (!game.isGameStarted) {
+            timer.startTimer();
+            game.isGameStarted = true;
         }
-    }
+        if (game.isGameOver) return;
+        if (field.classList.contains('open') || field.classList.contains('flagged')) return;
+        if (field.classList.contains('mine')) {
+            game.gameOver();
+        } else {
+            let total = util.countAdjacentMines(field);
     
-    field.classList.add('open');
+            if (total !== 0) {
+                field.classList.add('open');
+                field.innerHTML = total;
+                return;
+            } else{
+                field.classList.add('open');
+                util.recur(field);
+            }
+        }
+    
+        field.classList.add('open');
     },
     
     //Right click
     addOrRemoveFlag: function (field) {
-    if (!field.classList.contains('flagged') && game.flagsLeft > 0){
-        field.classList.add('flagged');
-        game.flagsLeft--;
-        game.flagsLeftCounter.setAttribute("value", game.flagsLeft.toString());
-        checks.checkForWin();
-    } else {
-        if (field.classList.contains('flagged')){
-            field.classList.remove('flagged');
-            game.flagsLeft++;
+        //Start timer
+        if (!game.isGameStarted) {
+            timer.startTimer();
+            game.isGameStarted = true;
+        }
+        
+        if (!field.classList.contains('flagged') && game.flagsLeft > 0){
+            field.classList.add('flagged');
+            game.flagsLeft--;
             game.flagsLeftCounter.setAttribute("value", game.flagsLeft.toString());
+            checks.checkForWin();
+        } else {
+            if (field.classList.contains('flagged')){
+                field.classList.remove('flagged');
+                game.flagsLeft++;
+                game.flagsLeftCounter.setAttribute("value", game.flagsLeft.toString());
+            }
         }
     }
+}
+
+const timer = {
+    elapsedTime : 0,
+
+    timerEl : document.querySelector('#elapsed-time-counter'),
+
+    updateTime: function () {
+        let seconds = this.elapsedTime % 60;
+        let minutes = Math.floor(this.elapsedTime / 60);
+        let hours = Math.floor(this.elapsedTime / 3600);
+
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        hours = hours < 10 ? '0' + hours : hours;
+        
+        let counter = `${hours} : ${minutes} : ${seconds}`;
+
+        this.timerEl.setAttribute("value", counter);
+        this.elapsedTime++;
+    },
+
+    startTimer: function () {
+        setInterval(()=>this.updateTime(), 1000)
     }
 }
 
 const game = {
     flagsLeftCounter: document.querySelector('#flags-left-counter'),
+    isGameStarted : false,
     isGameOver : false,
     flagsLeft : 0,
     mines : 0,
@@ -197,6 +234,6 @@ const game = {
         alert('Boom! Game over!');
         game.isGameOver = true;
     }
-};
+}
 
 game.init();

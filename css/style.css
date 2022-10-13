@@ -45,7 +45,11 @@
     background: url('../img/mine.png');
 }
 
-#flags-left-counter {
+#flags-left-counter{
+    text-align: center;
+}
+
+#elapsed-time-counter {
     text-align: center;
 }
 
