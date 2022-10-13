@@ -166,18 +166,20 @@ const timer = {
     timerEl : document.querySelector('#elapsed-time-counter'),
 
     updateTime: function () {
-        let seconds = this.elapsedTime % 60;
-        let minutes = Math.floor(this.elapsedTime / 60);
-        let hours = Math.floor(this.elapsedTime / 3600);
-
-        seconds = seconds < 10 ? '0' + seconds : seconds;
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        hours = hours < 10 ? '0' + hours : hours;
-        
-        let counter = `${hours} : ${minutes} : ${seconds}`;
-
-        this.timerEl.setAttribute("value", counter);
-        this.elapsedTime++;
+        if (!game.isGameOver) {
+            let seconds = this.elapsedTime % 60;
+            let minutes = Math.floor(this.elapsedTime / 60);
+            let hours = Math.floor(this.elapsedTime / 3600);
+    
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            hours = hours < 10 ? '0' + hours : hours;
+            
+            let counter = `${hours} : ${minutes} : ${seconds}`;
+    
+            this.timerEl.setAttribute("value", counter);
+            this.elapsedTime++;
+        }
     },
 
     startTimer: function () {
