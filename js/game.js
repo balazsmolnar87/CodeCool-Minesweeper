@@ -33,7 +33,7 @@ const domManipulation = {
         for (let row = 0; row < rows; row++) {
             const rowElement = this.addRow(gameField);
             for (let col = 0; col < cols; col++) {
-                this.addCell(rowElement, row, col, minePlaces.has(cellIndex), cellIndex);
+                this.addCell(rowElement, row, col, minePlaces.has(cellIndex));
                 cellIndex++;
             }
         }
@@ -52,11 +52,10 @@ const domManipulation = {
         return gameField.lastElementChild;
     },
 
-    addCell: function (rowElement, row, col, isMine, cellIndex) {
+    addCell: function (rowElement, row, col, isMine) {
         rowElement.insertAdjacentHTML(
             'beforeend',
             `<div class="field${isMine ? ' mine' : ''}"
-                        id="${cellIndex}"
                         data-row="${row}"
                         data-col="${col}"></div>`);
     }
